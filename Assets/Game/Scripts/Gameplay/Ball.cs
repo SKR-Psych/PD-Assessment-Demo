@@ -1,5 +1,6 @@
 using UnityEngine;
 using SortingBoardGame.Data;
+using SortingBoardGame.Managers;
 
 namespace SortingBoardGame.Gameplay
 {
@@ -29,6 +30,7 @@ namespace SortingBoardGame.Gameplay
         // Ball data tracking
         private BallData ballData;
         private int ballId;
+        private float lastRollSoundTime = 0f;
         
         public BallColor Color => ballColor;
         public float Size => ballSize;
@@ -60,6 +62,23 @@ namespace SortingBoardGame.Gameplay
         {
             originalMaterial = ballRenderer.material;
             SetupPhysics();
+        }
+        
+        void Update()
+        {
+            // Play rolling sound when ball is moving
+            if (currentState == BallState.Idle && ballRigidbody != null)
+            {
+                float velocity = ballRigidbody.velocity.magnitude;
+                if (velocity > 0.5f && Time.time - lastRollSoundTime > 0.5f)
+                {
+                    if (AudioManager.Instance != null)
+                    {
+                        AudioManager.Instance.PlayBallRollSound(transform.position, velocity / 5f);
+                        lastRollSoundTime = Time.time;
+                    }
+                }
+            }
         }
         
         private void SetupPhysics()

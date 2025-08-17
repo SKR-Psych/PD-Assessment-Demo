@@ -44,7 +44,9 @@
   - Create placement error indicator display (numeric or bar) shown after each placement
   - _Requirements: 4.2, 4.3, 4.4, 4.5, 4.6, 4.7_
 
-- [ ] 6. Implement audio system
+- [x] 6. Implement audio system
+
+
 
   - Create AudioManager singleton for centralized audio control
   - Add background music loop with mute option functionality
@@ -54,12 +56,16 @@
   - Configure audio mixing and 3D positional audio for immersive experience
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
+
+
 - [ ] 7. Create statistics tracking and HUD system
 
   - Write StatisticsManager script to track all required ball placement metrics
   - Implement real-time calculation of accuracy percentage, average placement error, completion time, and throughput
   - Create HUDManager script with UI elements that update live after each ball placement
   - Display accuracy %, average placement error, average completion time, and objects per minute
+
+
   - Ensure HUD updates maintain 60+ FPS performance during gameplay
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
@@ -68,12 +74,16 @@
   - Create DataLogger script to record all trial data with required fields
   - Implement session_id and trial_id generation for unique identification
   - Add timestamp recording for spawn_time, grasp_time, release_time, completion_time
+
+
   - Write CSV and JSON export functionality to Documents/SortingBoard/Logs/{date}/session_xxx
   - Implement file I/O operations that don't block gameplay performance
   - Add data validation and error handling for logging operations
   - _Requirements: 5.6, 5.7_
 
 - [ ] 9. Create level management and completion system
+
+
 
   - Write LevelController script to manage Level 1 configuration (20 balls total)
   - Implement level start/end conditions and ball counting logic
@@ -82,6 +92,8 @@
   - Ensure level completion triggers data export and statistics summary
   - _Requirements: 7.4, 7.5, 7.6_
 
+
+
 - [ ] 10. Implement game state management
 
   - Create GameManager singleton to orchestrate overall game flow
@@ -89,6 +101,9 @@
   - Implement proper scene management and application lifecycle handling
   - Connect all systems through event-driven architecture for loose coupling
   - Add error recovery mechanisms for edge cases (stuck balls, input failures)
+
+
+
   - _Requirements: 3.6, 8.5_
 
 - [ ] 11. Performance optimization and testing

@@ -10,6 +10,7 @@ namespace SortingBoardGame.Gameplay
         [SerializeField] private HoleManager holeManager;
         [SerializeField] private BallSpawner ballSpawner;
         [SerializeField] private VisualEffectsManager visualEffectsManager;
+        [SerializeField] private StatisticsManager statisticsManager;
         
         void Start()
         {
@@ -24,6 +25,9 @@ namespace SortingBoardGame.Gameplay
             
             if (visualEffectsManager == null)
                 visualEffectsManager = FindObjectOfType<VisualEffectsManager>();
+            
+            if (statisticsManager == null)
+                statisticsManager = StatisticsManager.Instance;
             
             // Subscribe to mouse interaction events
             if (mouseSystem != null)
@@ -140,6 +144,12 @@ namespace SortingBoardGame.Gameplay
                 HandleFailedPlacement(ball, releasePosition);
             }
             
+            // Record ball placement in statistics
+            if (statisticsManager != null)
+            {
+                statisticsManager.RecordBallPlacement(ball);
+            }
+            
             // Clear all hole highlighting
             holeManager.HighlightCompatibleHoles(ball.Color, ball.Size, false);
             
@@ -165,8 +175,11 @@ namespace SortingBoardGame.Gameplay
                 visualEffectsManager.ShowPlacementErrorIndicator(snapPosition, ball.Data.placementErrorPx, true);
             }
             
-            // TODO: Trigger success audio feedback
-            // This will be implemented in the next task
+            // Trigger success audio feedback
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySuccessSound(snapPosition);
+            }
             
             Debug.Log($"Successful placement! Ball {ball.BallId} placed in {targetHole.HoleColor} hole " +
                      $"with {placementError:F2} error");
@@ -188,8 +201,11 @@ namespace SortingBoardGame.Gameplay
                 visualEffectsManager.ShowPlacementErrorIndicator(releasePosition, ball.Data.placementErrorPx, false);
             }
             
-            // TODO: Trigger failure audio feedback
-            // This will be implemented in the next task
+            // Trigger failure audio feedback
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayFailureSound(releasePosition);
+            }
             
             Debug.Log($"Failed placement! Ball {ball.BallId} dropped at {releasePosition}");
         }
