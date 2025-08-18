@@ -157,8 +157,8 @@ namespace SortingBoardGame.Managers
             
             OnBallPickup?.Invoke(ball);
             
-            Debug.Log($"Started dragging ball {ball.BallId} ({ball.Color})");    
-    }
+            Debug.Log($"Started dragging ball {ball.BallId} ({ball.Color})");
+        }
         
         private void StopDragging()
         {

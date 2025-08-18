@@ -174,52 +174,6 @@ namespace SortingBoardGame.Managers
         public int TrialCount => sessionData.Count;
         public bool IsLoggingEnabled => enableLogging;
         
-        // Method to get session statistics
-        public SessionStatistics GetSessionStatistics()
-        {
-            if (sessionData.Count == 0)
-                return new SessionStatistics();
-            
-            int successful = 0;
-            float totalError = 0f;
-            float totalTime = 0f;
-            
-            foreach (BallData ball in sessionData)
-            {
-                if (ball.outcome == PlacementOutcome.Success)
-                    successful++;
-                totalError += ball.placementErrorPx;
-                totalTime += ball.completionTime;
-            }
-            
-            return new SessionStatistics
-            {
-                totalTrials = sessionData.Count,
-                successfulTrials = successful,
-                accuracyPercentage = (successful / (float)sessionData.Count) * 100f,
-                averageError = totalError / sessionData.Count,
-                averageTime = totalTime / sessionData.Count
-            };
-        }
-        
-        // Method to validate data integrity
-        public bool ValidateSessionData()
-        {
-            foreach (BallData ball in sessionData)
-            {
-                if (string.IsNullOrEmpty(ball.sessionId) ||
-                    ball.trialId <= 0 ||
-                    ball.spawnTime <= 0 ||
-                    ball.completionTime <= 0)
-                {
-                    Debug.LogWarning($"Invalid ball data found: Trial {ball.trialId}");
-                    return false;
-                }
-            }
-            
-            return true;
-        }
-        
         // Auto-export on application quit
         void OnApplicationPause(bool pauseStatus)
         {
@@ -253,22 +207,5 @@ namespace SortingBoardGame.Managers
         public string exportTime;
         public int totalTrials;
         public List<BallData> ballData;
-    }
-    
-    [System.Serializable]
-    public class SessionStatistics
-    {
-        public int totalTrials;
-        public int successfulTrials;
-        public float accuracyPercentage;
-        public float averageError;
-        public float averageTime;
-        
-        public override string ToString()
-        {
-            return $"Session Stats - Trials: {totalTrials}, Success: {successfulTrials}, " +
-                   $"Accuracy: {accuracyPercentage:F1}%, Avg Error: {averageError:F1}px, " +
-                   $"Avg Time: {averageTime:F2}s";
-        }
     }
 }

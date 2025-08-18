@@ -12,11 +12,21 @@ namespace SortingBoardGame.Gameplay
         
         void Start()
         {
+            if (gameConfig == null)
+            {
+                gameConfig = GameManager.Instance?.Config;
+            }
             CreateBoard();
         }
         
         private void CreateBoard()
         {
+            if (gameConfig == null)
+            {
+                Debug.LogError("GameConfig is null in GameBoard!");
+                return;
+            }
+            
             // Create board GameObject
             boardObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
             boardObject.name = "GameBoard";
@@ -56,7 +66,7 @@ namespace SortingBoardGame.Gameplay
         
         public Vector3 GetBoardSize()
         {
-            return gameConfig.boardSize;
+            return gameConfig != null ? gameConfig.boardSize : new Vector3(1.0f, 0.0f, 0.6f);
         }
     }
 }

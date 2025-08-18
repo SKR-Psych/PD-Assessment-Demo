@@ -71,6 +71,12 @@ namespace SortingBoardGame.Managers
         
         private void InitializeGame()
         {
+            // Create default config if none assigned
+            if (gameConfig == null)
+            {
+                gameConfig = CreateDefaultGameConfig();
+            }
+            
             // Set target frame rate
             Application.targetFrameRate = gameConfig.targetFPS;
             
@@ -84,6 +90,28 @@ namespace SortingBoardGame.Managers
             Application.logMessageReceived += HandleLogMessage;
             
             Debug.Log("Game Manager initialized - Sorting Board Game v1.0");
+        }
+        
+        private GameConfig CreateDefaultGameConfig()
+        {
+            GameConfig config = ScriptableObject.CreateInstance<GameConfig>();
+            
+            // Set default values
+            config.totalBalls = 20;
+            config.spawnInterval = 2.0f;
+            config.ballDiameter = 120f;
+            config.boardSize = new Vector3(1.0f, 0.0f, 0.6f);
+            config.boardHeight = 0.9f;
+            config.holeDiameters = new float[] { 160f, 140f, 120f };
+            config.holeColors = new Color[] { Color.red, Color.blue, Color.yellow };
+            config.cameraAngle = 45f;
+            config.cameraFOV = 45f;
+            config.targetFPS = 60;
+            config.targetResolutionWidth = 1920;
+            config.targetResolutionHeight = 1080;
+            
+            Debug.Log("Created default GameConfig");
+            return config;
         }
         
         private IEnumerator InitializeSystemsCoroutine()

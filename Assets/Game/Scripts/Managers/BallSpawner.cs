@@ -27,8 +27,13 @@ namespace SortingBoardGame.Managers
         
         void Start()
         {
+            if (gameConfig == null)
+            {
+                gameConfig = GameManager.Instance?.Config;
+            }
+            
             currentSessionId = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            maxBalls = gameConfig.totalBalls;
+            maxBalls = gameConfig != null ? gameConfig.totalBalls : 20;
             InitializeBallPool();
         }
         
@@ -80,7 +85,7 @@ namespace SortingBoardGame.Managers
             ballsSpawned = 0;
             spawningCoroutine = StartCoroutine(SpawnBallsCoroutine());
             
-            Debug.Log($"Started spawning {maxBalls} balls at {gameConfig.spawnInterval}s intervals");
+            Debug.Log($"Started spawning {maxBalls} balls at {(gameConfig != null ? gameConfig.spawnInterval : 2f)}s intervals");
         }
         
         public void StopSpawning()
@@ -103,7 +108,7 @@ namespace SortingBoardGame.Managers
                 ballsSpawned++;
                 
                 // Wait for spawn interval (2 seconds for Level 1)
-                yield return new WaitForSeconds(gameConfig.spawnInterval);
+                yield return new WaitForSeconds(gameConfig != null ? gameConfig.spawnInterval : 2f);
             }
             
             IsSpawning = false;
@@ -141,7 +146,7 @@ namespace SortingBoardGame.Managers
         private Vector3 GetSpawnPosition()
         {
             Vector3 boardCenter = gameBoard != null ? gameBoard.GetBoardCenter() : Vector3.zero;
-            Vector3 boardSize = gameBoard != null ? gameBoard.GetBoardSize() : gameConfig.boardSize;
+            Vector3 boardSize = gameBoard != null ? gameBoard.GetBoardSize() : (gameConfig != null ? gameConfig.boardSize : new Vector3(1.0f, 0.0f, 0.6f));
             
             // Spawn balls at random positions above the board edge
             Vector3 spawnPos = boardCenter;

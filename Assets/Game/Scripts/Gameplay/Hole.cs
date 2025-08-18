@@ -19,7 +19,10 @@ namespace SortingBoardGame.Gameplay
         void Start()
         {
             holeRenderer = GetComponent<Renderer>();
-            originalMaterial = holeRenderer.material;
+            if (holeRenderer != null)
+            {
+                originalMaterial = holeRenderer.material;
+            }
         }
         
         public void Initialize(HoleConfig config)
@@ -46,11 +49,29 @@ namespace SortingBoardGame.Gameplay
             holeMaterial.SetColor("_EmissionColor", holeMaterial.color * 0.3f);
             
             holeRenderer = GetComponent<Renderer>();
+            if (holeRenderer == null)
+            {
+                // Add a renderer if none exists
+                MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
+                MeshFilter filter = gameObject.AddComponent<MeshFilter>();
+                
+                // Create a simple cylinder mesh for the hole
+                GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                filter.mesh = cylinder.GetComponent<MeshFilter>().mesh;
+                DestroyImmediate(cylinder);
+                
+                holeRenderer = renderer;
+            }
+            
             holeRenderer.material = holeMaterial;
             originalMaterial = holeMaterial;
             
             // Add collider for ball detection
-            SphereCollider holeCollider = gameObject.AddComponent<SphereCollider>();
+            SphereCollider holeCollider = gameObject.GetComponent<SphereCollider>();
+            if (holeCollider == null)
+            {
+                holeCollider = gameObject.AddComponent<SphereCollider>();
+            }
             holeCollider.isTrigger = true;
             holeCollider.radius = 0.6f; // Slightly larger than visual for easier targeting
             
@@ -78,9 +99,19 @@ namespace SortingBoardGame.Gameplay
             
             isHighlighted = highlight;
             
+            if (holeRenderer == null) return;
+            
             if (highlight && highlightMaterial != null)
             {
                 holeRenderer.material = highlightMaterial;
+            }
+            else if (highlight)
+            {
+                // Create highlight effect by increasing emission
+                Material highlightMat = new Material(originalMaterial);
+                highlightMat.EnableKeyword("_EMISSION");
+                highlightMat.SetColor("_EmissionColor", GetUnityColor(holeConfig.color) * 0.8f);
+                holeRenderer.material = highlightMat;
             }
             else
             {

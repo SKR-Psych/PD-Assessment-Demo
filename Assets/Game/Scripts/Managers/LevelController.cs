@@ -46,6 +46,11 @@ namespace SortingBoardGame.Managers
         {
             if (gameConfig == null)
             {
+                gameConfig = GameManager.Instance?.Config;
+            }
+            
+            if (gameConfig == null)
+            {
                 Debug.LogError("GameConfig not assigned to LevelController!");
                 return;
             }

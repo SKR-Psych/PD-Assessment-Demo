@@ -16,6 +16,10 @@ namespace SortingBoardGame.Managers
         
         void Start()
         {
+            if (gameConfig == null)
+            {
+                gameConfig = GameManager.Instance?.Config;
+            }
             CreateHoleConfigurations();
             CreateHoles();
         }
@@ -30,7 +34,7 @@ namespace SortingBoardGame.Managers
             
             // Create hole configurations based on GameConfig
             Vector3 boardCenter = gameBoard != null ? gameBoard.GetBoardCenter() : Vector3.zero;
-            Vector3 boardSize = gameBoard != null ? gameBoard.GetBoardSize() : gameConfig.boardSize;
+            Vector3 boardSize = gameBoard != null ? gameBoard.GetBoardSize() : (gameConfig != null ? gameConfig.boardSize : new Vector3(1.0f, 0.0f, 0.6f));
             
             // Position holes evenly across the board
             float spacing = boardSize.x / 4f; // Divide board width by 4 for 3 holes with spacing

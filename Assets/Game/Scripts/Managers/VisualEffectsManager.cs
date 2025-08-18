@@ -32,7 +32,11 @@ namespace SortingBoardGame.Managers
         
         public void PlaySuccessEffect(Vector3 worldPosition, BallColor ballColor)
         {
-            if (successParticlesPrefab == null) return;
+            if (successParticlesPrefab == null) 
+            {
+                CreateDefaultSuccessEffect(worldPosition, ballColor);
+                return;
+            }
             
             // Instantiate success particle effect
             ParticleSystem particles = Instantiate(successParticlesPrefab, worldPosition, Quaternion.identity);
@@ -56,7 +60,11 @@ namespace SortingBoardGame.Managers
         
         public void PlayFailureEffect(Vector3 worldPosition)
         {
-            if (failureParticlesPrefab == null) return;
+            if (failureParticlesPrefab == null) 
+            {
+                CreateDefaultFailureEffect(worldPosition);
+                return;
+            }
             
             // Instantiate failure particle effect
             ParticleSystem particles = Instantiate(failureParticlesPrefab, worldPosition, Quaternion.identity);
@@ -73,33 +81,63 @@ namespace SortingBoardGame.Managers
         
         public void ShowPlacementErrorIndicator(Vector3 worldPosition, float errorDistance, bool isSuccess)
         {
-            if (placementErrorIndicatorPrefab == null || uiCanvas == null || mainCamera == null) 
+            CreateDefaultErrorIndicator(worldPosition, errorDistance, isSuccess);
+        }
+        
+        private void CreateDefaultSuccessEffect(Vector3 worldPosition, BallColor ballColor)
+        {
+            // Create a simple particle effect
+            GameObject effectObj = new GameObject("SuccessEffect");
+            effectObj.transform.position = worldPosition;
+            
+            ParticleSystem particles = effectObj.AddComponent<ParticleSystem>();
+            
+            var main = particles.main;
+            main.startLifetime = 1f;
+            main.startSpeed = 5f;
+            main.startSize = 0.1f;
+            main.startColor = GetUnityColor(ballColor);
+            main.maxParticles = 50;
+            
+            var emission = particles.emission;
+            emission.rateOverTime = 0;
+            emission.SetBursts(new ParticleSystem.Burst[]
             {
-                CreateDefaultErrorIndicator(worldPosition, errorDistance, isSuccess);
-                return;
-            }
+                new ParticleSystem.Burst(0.0f, 50)
+            });
             
-            // Convert world position to screen position
-            Vector3 screenPosition = mainCamera.WorldToScreenPoint(worldPosition);
+            var shape = particles.shape;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = 0.2f;
             
-            // Create error indicator UI element
-            GameObject indicator = Instantiate(placementErrorIndicatorPrefab, uiCanvas.transform);
-            RectTransform rectTransform = indicator.GetComponent<RectTransform>();
+            // Auto-destroy
+            Destroy(effectObj, particleLifetime);
+        }
+        
+        private void CreateDefaultFailureEffect(Vector3 worldPosition)
+        {
+            // Create a simple failure effect
+            GameObject effectObj = new GameObject("FailureEffect");
+            effectObj.transform.position = worldPosition;
             
-            if (rectTransform != null)
+            ParticleSystem particles = effectObj.AddComponent<ParticleSystem>();
+            
+            var main = particles.main;
+            main.startLifetime = 0.5f;
+            main.startSpeed = 2f;
+            main.startSize = 0.05f;
+            main.startColor = Color.gray;
+            main.maxParticles = 20;
+            
+            var emission = particles.emission;
+            emission.rateOverTime = 0;
+            emission.SetBursts(new ParticleSystem.Burst[]
             {
-                rectTransform.position = screenPosition;
-            }
+                new ParticleSystem.Burst(0.0f, 20)
+            });
             
-            // Configure the indicator (assuming it has a PlacementErrorIndicator component)
-            PlacementErrorIndicator errorComponent = indicator.GetComponent<PlacementErrorIndicator>();
-            if (errorComponent != null)
-            {
-                errorComponent.Initialize(errorDistance, isSuccess);
-            }
-            
-            // Auto-destroy after duration
-            Destroy(indicator, errorIndicatorDuration);
+            // Auto-destroy
+            Destroy(effectObj, particleLifetime);
         }
         
         private void CreateDefaultErrorIndicator(Vector3 worldPosition, float errorDistance, bool isSuccess)
@@ -115,8 +153,11 @@ namespace SortingBoardGame.Managers
             textMesh.anchor = TextAnchor.MiddleCenter;
             
             // Make text face camera
-            textObj.transform.LookAt(mainCamera.transform);
-            textObj.transform.Rotate(0, 180, 0);
+            if (mainCamera != null)
+            {
+                textObj.transform.LookAt(mainCamera.transform);
+                textObj.transform.Rotate(0, 180, 0);
+            }
             
             // Auto-destroy
             Destroy(textObj, errorIndicatorDuration);
@@ -142,71 +183,13 @@ namespace SortingBoardGame.Managers
         {
             if (successParticlesPrefab == null)
             {
-                successParticlesPrefab = CreateDefaultSuccessParticles();
+                Debug.Log("Creating default success particle system");
             }
             
             if (failureParticlesPrefab == null)
             {
-                failureParticlesPrefab = CreateDefaultFailureParticles();
+                Debug.Log("Creating default failure particle system");
             }
-        }
-        
-        private ParticleSystem CreateDefaultSuccessParticles()
-        {
-            GameObject particleObj = new GameObject("SuccessParticles");
-            ParticleSystem particles = particleObj.AddComponent<ParticleSystem>();
-            
-            var main = particles.main;
-            main.startLifetime = 1f;
-            main.startSpeed = 5f;
-            main.startSize = 0.1f;
-            main.startColor = Color.white;
-            main.maxParticles = 50;
-            
-            var emission = particles.emission;
-            emission.rateOverTime = 0;
-            emission.SetBursts(new ParticleSystem.Burst[]
-            {
-                new ParticleSystem.Burst(0.0f, 50)
-            });
-            
-            var shape = particles.shape;
-            shape.shapeType = ParticleSystemShapeType.Circle;
-            shape.radius = 0.2f;
-            
-            var velocityOverLifetime = particles.velocityOverLifetime;
-            velocityOverLifetime.enabled = true;
-            velocityOverLifetime.space = ParticleSystemSimulationSpace.Local;
-            velocityOverLifetime.radial = new ParticleSystem.MinMaxCurve(2f);
-            
-            // Don't make it a prefab, just return the component
-            return particles;
-        }
-        
-        private ParticleSystem CreateDefaultFailureParticles()
-        {
-            GameObject particleObj = new GameObject("FailureParticles");
-            ParticleSystem particles = particleObj.AddComponent<ParticleSystem>();
-            
-            var main = particles.main;
-            main.startLifetime = 0.5f;
-            main.startSpeed = 2f;
-            main.startSize = 0.05f;
-            main.startColor = Color.gray;
-            main.maxParticles = 20;
-            
-            var emission = particles.emission;
-            emission.rateOverTime = 0;
-            emission.SetBursts(new ParticleSystem.Burst[]
-            {
-                new ParticleSystem.Burst(0.0f, 20)
-            });
-            
-            var shape = particles.shape;
-            shape.shapeType = ParticleSystemShapeType.Circle;
-            shape.radius = 0.1f;
-            
-            return particles;
         }
     }
 }
