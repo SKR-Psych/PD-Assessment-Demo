@@ -1,18 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using SortingBoardGame.Managers;
+
+// Note: TextMeshPro components will be created as regular Text components if TMPro is not available
 
 namespace SortingBoardGame.UI
 {
     public class HUDManager : MonoBehaviour
     {
         [Header("HUD Text Elements")]
-        [SerializeField] private TextMeshProUGUI accuracyText;
-        [SerializeField] private TextMeshProUGUI averageErrorText;
-        [SerializeField] private TextMeshProUGUI averageTimeText;
-        [SerializeField] private TextMeshProUGUI throughputText;
-        [SerializeField] private TextMeshProUGUI placementCountText;
+        [SerializeField] private Text accuracyText;
+        [SerializeField] private Text averageErrorText;
+        [SerializeField] private Text averageTimeText;
+        [SerializeField] private Text throughputText;
+        [SerializeField] private Text placementCountText;
         
         [Header("HUD Panel")]
         [SerializeField] private GameObject hudPanel;
@@ -20,7 +21,7 @@ namespace SortingBoardGame.UI
         
         [Header("Audio Controls")]
         [SerializeField] private Button musicToggleButton;
-        [SerializeField] private TextMeshProUGUI musicToggleText;
+        [SerializeField] private Text musicToggleText;
         
         void Start()
         {
@@ -104,16 +105,19 @@ namespace SortingBoardGame.UI
             CreateMusicToggleButton();
         }
         
-        private TextMeshProUGUI CreateHUDText(string name, string initialText, int index)
+        private Text CreateHUDText(string name, string initialText, int index)
         {
             GameObject textObj = new GameObject(name);
             textObj.transform.SetParent(hudPanel.transform, false);
             
-            TextMeshProUGUI text = textObj.AddComponent<TextMeshProUGUI>();
+            Text text = textObj.AddComponent<Text>();
             text.text = initialText;
             text.fontSize = 16;
             text.color = Color.white;
-            text.alignment = TextAlignmentOptions.Left;
+            text.alignment = TextAnchor.MiddleLeft;
+            
+            // Set default font
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             
             RectTransform textRect = textObj.GetComponent<RectTransform>();
             textRect.anchorMin = new Vector2(0, 1);
@@ -145,11 +149,12 @@ namespace SortingBoardGame.UI
             GameObject textObj = new GameObject("ButtonText");
             textObj.transform.SetParent(buttonObj.transform, false);
             
-            musicToggleText = textObj.AddComponent<TextMeshProUGUI>();
-            musicToggleText.text = "🔊 Music: ON";
+            musicToggleText = textObj.AddComponent<Text>();
+            musicToggleText.text = "Music: ON";
             musicToggleText.fontSize = 14;
             musicToggleText.color = Color.white;
-            musicToggleText.alignment = TextAlignmentOptions.Center;
+            musicToggleText.alignment = TextAnchor.MiddleCenter;
+            musicToggleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             
             RectTransform textRect = textObj.GetComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;
@@ -180,7 +185,7 @@ namespace SortingBoardGame.UI
             if (AudioManager.Instance != null && musicToggleText != null)
             {
                 bool isMuted = AudioManager.Instance.IsMusicMuted;
-                musicToggleText.text = isMuted ? "🔇 Music: OFF" : "🔊 Music: ON";
+                musicToggleText.text = isMuted ? "Music: OFF" : "Music: ON";
             }
         }
         

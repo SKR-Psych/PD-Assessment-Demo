@@ -100,10 +100,10 @@ namespace SortingBoardGame
             }
             
             // Create LevelController if it doesn't exist
-            if (FindObjectOfType<LevelController>() == null)
+            if (FindObjectOfType<SortingBoardGame.Managers.LevelController>() == null)
             {
                 GameObject levelControllerObj = new GameObject("LevelController");
-                levelControllerObj.AddComponent<LevelController>();
+                levelControllerObj.AddComponent<SortingBoardGame.Managers.LevelController>();
             }
             
             Debug.Log("Game auto-setup complete!");

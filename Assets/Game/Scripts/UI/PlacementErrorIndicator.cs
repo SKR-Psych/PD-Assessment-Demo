@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 namespace SortingBoardGame.UI
 {
     public class PlacementErrorIndicator : MonoBehaviour
     {
         [Header("UI Components")]
-        [SerializeField] private TextMeshProUGUI errorText;
+        [SerializeField] private Text errorText;
         [SerializeField] private Slider errorBar;
         [SerializeField] private Image backgroundImage;
         
@@ -22,7 +21,7 @@ namespace SortingBoardGame.UI
         {
             // Try to find components if not assigned
             if (errorText == null)
-                errorText = GetComponentInChildren<TextMeshProUGUI>();
+                errorText = GetComponentInChildren<Text>();
             
             if (errorBar == null)
                 errorBar = GetComponentInChildren<Slider>();
@@ -134,11 +133,12 @@ namespace SortingBoardGame.UI
             GameObject textObj = new GameObject("ErrorText");
             textObj.transform.SetParent(indicator.transform);
             
-            TextMeshProUGUI text = textObj.AddComponent<TextMeshProUGUI>();
+            Text text = textObj.AddComponent<Text>();
             text.text = "Error: 0.0px";
             text.fontSize = 14;
             text.color = Color.white;
-            text.alignment = TextAlignmentOptions.Center;
+            text.alignment = TextAnchor.MiddleCenter;
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             
             RectTransform textRect = textObj.GetComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;

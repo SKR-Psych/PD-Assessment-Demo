@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using SortingBoardGame.Data;
 using SortingBoardGame.Gameplay;
 using SortingBoardGame.UI;
 

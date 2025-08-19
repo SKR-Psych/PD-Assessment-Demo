@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using SortingBoardGame.Managers;
 
 namespace SortingBoardGame.UI
@@ -9,13 +8,13 @@ namespace SortingBoardGame.UI
     {
         [Header("UI Elements")]
         [SerializeField] private GameObject summaryPanel;
-        [SerializeField] private TextMeshProUGUI titleText;
-        [SerializeField] private TextMeshProUGUI accuracyText;
-        [SerializeField] private TextMeshProUGUI errorText;
-        [SerializeField] private TextMeshProUGUI timeText;
-        [SerializeField] private TextMeshProUGUI throughputText;
-        [SerializeField] private TextMeshProUGUI successText;
-        [SerializeField] private TextMeshProUGUI totalTimeText;
+        [SerializeField] private Text titleText;
+        [SerializeField] private Text accuracyText;
+        [SerializeField] private Text errorText;
+        [SerializeField] private Text timeText;
+        [SerializeField] private Text throughputText;
+        [SerializeField] private Text successText;
+        [SerializeField] private Text totalTimeText;
         
         [Header("Buttons")]
         [SerializeField] private Button restartButton;
@@ -105,16 +104,17 @@ namespace SortingBoardGame.UI
             CreateButtons();
         }
         
-        private TextMeshProUGUI CreateSummaryText(string name, string text, int index, int fontSize, Color color)
+        private Text CreateSummaryText(string name, string text, int index, int fontSize, Color color)
         {
             GameObject textObj = new GameObject(name);
             textObj.transform.SetParent(summaryPanel.transform, false);
             
-            TextMeshProUGUI textComponent = textObj.AddComponent<TextMeshProUGUI>();
+            Text textComponent = textObj.AddComponent<Text>();
             textComponent.text = text;
             textComponent.fontSize = fontSize;
             textComponent.color = color;
-            textComponent.alignment = TextAlignmentOptions.Center;
+            textComponent.alignment = TextAnchor.MiddleCenter;
+            textComponent.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             
             RectTransform textRect = textObj.GetComponent<RectTransform>();
             textRect.anchorMin = new Vector2(0, 1);
@@ -147,11 +147,12 @@ namespace SortingBoardGame.UI
             GameObject restartTextObj = new GameObject("RestartText");
             restartTextObj.transform.SetParent(restartObj.transform, false);
             
-            TextMeshProUGUI restartText = restartTextObj.AddComponent<TextMeshProUGUI>();
+            Text restartText = restartTextObj.AddComponent<Text>();
             restartText.text = "Restart Level";
             restartText.fontSize = 16;
             restartText.color = Color.white;
-            restartText.alignment = TextAlignmentOptions.Center;
+            restartText.alignment = TextAnchor.MiddleCenter;
+            restartText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             
             RectTransform restartTextRect = restartTextObj.GetComponent<RectTransform>();
             restartTextRect.anchorMin = Vector2.zero;
@@ -178,11 +179,12 @@ namespace SortingBoardGame.UI
             GameObject exitTextObj = new GameObject("ExitText");
             exitTextObj.transform.SetParent(exitObj.transform, false);
             
-            TextMeshProUGUI exitText = exitTextObj.AddComponent<TextMeshProUGUI>();
+            Text exitText = exitTextObj.AddComponent<Text>();
             exitText.text = "Exit Game";
             exitText.fontSize = 16;
             exitText.color = Color.white;
-            exitText.alignment = TextAlignmentOptions.Center;
+            exitText.alignment = TextAnchor.MiddleCenter;
+            exitText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             
             RectTransform exitTextRect = exitTextObj.GetComponent<RectTransform>();
             exitTextRect.anchorMin = Vector2.zero;

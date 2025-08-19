@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using SortingBoardGame.Data;
 using SortingBoardGame.Gameplay;
+using SortingBoardGame.UI;
 
 namespace SortingBoardGame.Managers
 {

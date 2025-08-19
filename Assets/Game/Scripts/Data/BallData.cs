@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace SortingBoardGame.Data
 {
@@ -17,7 +18,7 @@ namespace SortingBoardGame.Data
         Timeout
     }
     
-    [Serializable]
+    [System.Serializable]
     public class BallData
     {
         public string sessionId;
