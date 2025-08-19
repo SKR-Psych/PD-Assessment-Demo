@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using SortingBoardGame.Data;
 using SortingBoardGame.Gameplay;
-    
+
+namespace SortingBoardGame
+{
     // Using BallData from SortingBoardGame.Data namespace instead of SimpleBallData
     
     public class SimpleGame : MonoBehaviour
